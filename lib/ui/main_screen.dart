@@ -1,7 +1,6 @@
-
 import 'package:flutter/material.dart';
-import 'package:time_app/data_source/time_api.dart';
 import 'package:time_app/model/time.dart';
+import 'package:time_app/repository/time_repository.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -11,14 +10,16 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  final repository = TimeRepository();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('FutureBuilder'),
+        title: Text('StreamBuilder'),
       ),
-      body: FutureBuilder<Time>(
-        future: TimeApi().getTime(),
+      body: StreamBuilder<Time>(
+        stream: repository.getTimeStream(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
