@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:time_app/data_source/time_api.dart';
 import 'package:time_app/model/time.dart';
@@ -14,7 +15,7 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('원래방식'),
+        title: Text('FutureBuilder'),
       ),
       body: FutureBuilder<Time>(
         future: TimeApi().getTime(),
