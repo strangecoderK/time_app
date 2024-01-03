@@ -10,51 +10,45 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  Time? _time;
-  final _api = TimeApi();
-
-  bool get isLoading => _time == null;
-
-  Future<void> init() async {
-    final time = await _api.getTime();
-    setState(() {
-      _time = time;
-    });
-  }
-
-  @override
-  void initState() {
-    init();
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('원래방식'),
       ),
-      body: isLoading
-          ? Center(child: CircularProgressIndicator())
-          : Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    _time!.time,
-                    style: TextStyle(
-                      fontSize: 24,
-                    ),
+      body: FutureBuilder<Time>(
+        future: TimeApi().getTime(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (!snapshot.hasData) {
+            return Center(
+              child: Text('no data'),
+            );
+          }
+          final Time time = snapshot.data!;
+          return Center(
+            child: Column(
+              children: [
+                Text(
+                  time.time,
+                  style: TextStyle(
+                    fontSize: 23,
                   ),
-                  Text(
-                    _time!.utcTime,
-                    style: TextStyle(
-                      fontSize: 24,
-                    ),
+                ),
+                Text(
+                  time.utcTime,
+                  style: TextStyle(
+                    fontSize: 23,
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
+          );
+        },
+      ),
     );
   }
 }
